@@ -1,0 +1,5 @@
+source 'git@github.com:CocoaPods/Specs.git'
+target 'testWeex' do
+	platform :ios, '7.0'
+	pod 'WeexSDK'
+end
