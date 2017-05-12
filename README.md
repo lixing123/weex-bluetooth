@@ -9,8 +9,8 @@ For Chinese version of README click HERE.
 
 ## Installation
 
-## How to use
+## How to Use
 
-## Future plan
+## Future Plan
 
-## About author
+## About Author
