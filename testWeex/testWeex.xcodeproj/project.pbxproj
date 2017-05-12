@@ -15,6 +15,7 @@
 		8E1BD22D1EB07026000339AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E1BD22B1EB07026000339AC /* LaunchScreen.storyboard */; };
 		8E63583B1EB2D2F000DDE986 /* BluetoothModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E63583A1EB2D2F000DDE986 /* BluetoothModule.m */; };
 		8E63583F1EB2DB1C00DDE986 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E63583E1EB2DB1C00DDE986 /* CoreBluetooth.framework */; };
+		8EA014651EC54F7F005E8AD4 /* app.weex.js in Resources */ = {isa = PBXBuildFile; fileRef = 8EA014641EC54F7F005E8AD4 /* app.weex.js */; };
 		8EC9A5691EC0501800ED97EC /* Weex_BluetoothModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC9A5681EC0501800ED97EC /* Weex_BluetoothModule.m */; };
 		CBC02C9D09B367D8CAB85CF0 /* libPods-testWeex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F3BE742D82AF9A3CEAB4567 /* libPods-testWeex.a */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,7 @@
 		8E6358391EB2D2F000DDE986 /* BluetoothModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BluetoothModule.h; sourceTree = "<group>"; };
 		8E63583A1EB2D2F000DDE986 /* BluetoothModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BluetoothModule.m; sourceTree = "<group>"; };
 		8E63583E1EB2DB1C00DDE986 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		8EA014641EC54F7F005E8AD4 /* app.weex.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = app.weex.js; path = ../../test/dist/app.weex.js; sourceTree = "<group>"; };
 		8EC9A5671EC0501800ED97EC /* Weex_BluetoothModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Weex_BluetoothModule.h; sourceTree = "<group>"; };
 		8EC9A5681EC0501800ED97EC /* Weex_BluetoothModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Weex_BluetoothModule.m; sourceTree = "<group>"; };
 		AE62C0B19C98C019344C98BF /* Pods-testWeex.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testWeex.release.xcconfig"; path = "Pods/Target Support Files/Pods-testWeex/Pods-testWeex.release.xcconfig"; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				8E63583A1EB2D2F000DDE986 /* BluetoothModule.m */,
 				8EC9A5671EC0501800ED97EC /* Weex_BluetoothModule.h */,
 				8EC9A5681EC0501800ED97EC /* Weex_BluetoothModule.m */,
+				8EA014641EC54F7F005E8AD4 /* app.weex.js */,
 				8E1BD2261EB07026000339AC /* Main.storyboard */,
 				8E1BD2291EB07026000339AC /* Assets.xcassets */,
 				8E1BD22B1EB07026000339AC /* LaunchScreen.storyboard */,
@@ -181,6 +184,7 @@
 			files = (
 				8E1BD22D1EB07026000339AC /* LaunchScreen.storyboard in Resources */,
 				8E1BD22A1EB07026000339AC /* Assets.xcassets in Resources */,
+				8EA014651EC54F7F005E8AD4 /* app.weex.js in Resources */,
 				8E1BD2281EB07026000339AC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
