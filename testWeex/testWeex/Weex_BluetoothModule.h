@@ -15,6 +15,10 @@
 
 #define ERROR_CODE_STRING @"errCode"
 #define ERROR_CODE_SUCCEED @"0"
+#define ERROR_CODE_UNKNOWN @"10001"
+
+#define BluetoothAdapterStateDiscovering @"discovering"
+#define BluetoothAdapterStateAvailable   @"available"
 
 
 #define DEBUG_MODE

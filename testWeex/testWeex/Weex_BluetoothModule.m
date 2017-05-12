@@ -22,13 +22,10 @@
 @property(nonatomic, strong)WXModuleKeepAliveCallback onFoundServicesCallback;
 @property(nonatomic, strong)WXModuleKeepAliveCallback onFoundCharacteristicsCallback;
 @property(nonatomic, strong)WXModuleKeepAliveCallback onBLECharacteristicValueChangeCallback;
+@property(nonatomic, strong)WXModuleCallback onReadBLECharacteristicValueCallback;
+@property(nonatomic, strong)WXModuleKeepAliveCallback onBLEConnectionStateChangeCallback;
 
 @end
-
-#pragma mark TODO defines adapter state object.
-#pragma mark TODO defines device object.
-#pragma mark TODO defines service object.
-#pragma mark TODO defines characteristic object.
 
 @implementation Weex_BluetoothModule
 
@@ -39,10 +36,9 @@ WX_EXPORT_METHOD(@selector(closeBluetoothAdapter:))
 WX_EXPORT_METHOD(@selector(getBluetoothAdapterState:))
 WX_EXPORT_METHOD(@selector(onBluetoothAdapterStateChange:))
 WX_EXPORT_METHOD(@selector(startBluetoothDevicesDiscoveryWithServices:callback:))
-WX_EXPORT_METHOD(@selector(stopBluetoothDeviceDiscovery:))
+WX_EXPORT_METHOD(@selector(stopBluetoothDeviceDiscovery))
 WX_EXPORT_METHOD(@selector(getBluetoothDevicesWithServices:callback:))
 WX_EXPORT_METHOD(@selector(getConnectedBluetoothDevicesWithServices:callback:))
-WX_EXPORT_METHOD(@selector(onBluetoothDeviceFound:))
 WX_EXPORT_METHOD(@selector(createBLEConnectionWithDeviceID:callback:))
 WX_EXPORT_METHOD(@selector(closeBLEConnectionWithDeviceID:callback:))
 WX_EXPORT_METHOD(@selector(getBLEDeviceServicesWithDeviceID:callback:))
@@ -50,7 +46,6 @@ WX_EXPORT_METHOD(@selector(getBLEDeviceCharacteristicsWithDeviceID:serviceID:cal
 WX_EXPORT_METHOD(@selector(readBLECharacteristicValueWithDeviceID:serviceID:characteristicID:callback:))
 WX_EXPORT_METHOD(@selector(writeBLECharacteristicValueWithDeviceID:serviceID:characteristicID:value:callback:))
 WX_EXPORT_METHOD(@selector(notifyBLECharacteristicValueChangeWithDeviceID:servieID:characteristicID:state:callback:))
-WX_EXPORT_METHOD(@selector(onBLECharacteristicValueChange:))
 WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
 - (id)init {
@@ -64,7 +59,13 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 /**
  Initialize the bluetooth adapter.
 
- @param callback Callback to return weex result when completed; contains dictionary. Detailed as documents described.
+ @param callback When open bluetooth adapter has a result, this callback will be triggered with a dictionary.
+ resultDict = {
+    'result': (String)  will be "succeed" or "fail".
+    'errCode': (Int) 0 if succeed.
+ }
+ @see RESULT_STRING,ERROR_CODE_STRING
+ 
 */
 - (void)openBluetoothAdapter:(WXModuleKeepAliveCallback)callback {
     LXLog(@"%s",__func__);
@@ -79,7 +80,12 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 /**
  Close the bluetooth adapter; this will disconnect all connections and release all resources.
 
- @param callback Callback to return weex result when completed; contains dictionary. Detailed as documents described.
+ @param callback When close action finishes, this callback will be triggered with a dictionary.
+ resultDict = {
+    'result': (String)  will be "succeed" or "fail".
+    'errCode': (Int) 0 if succeed.
+ }
+ @see RESULT_STRING,ERROR_CODE_STRING
  */
 - (void)closeBluetoothAdapter:(WXModuleCallback)callback {
     LXLog(@"%s",__func__);
@@ -94,15 +100,21 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 /**
  Get the state of current adapter, whether is available, and whether is discovering devices.
 
- @param callback Callback to return weex result when completed; contains dictionary. Detailed as documents described.
+ @param callback callback to Weex with adapter state results dictionaray.
+ resultDict = {
+    'result': (String) will be "succeed" or "fail"
+    'errCode': (Int) 0 if succeed.
+    'adapterState' = {
+        'discovering': (BOOL) whether the adapter is discovering devices.
+        'available': (BOOL) the availability of the adapter
+    }
+ }
+ @see RESULT_STRING,ERROR_CODE_STRING
  */
 - (void)getBluetoothAdapterState:(WXModuleCallback)callback {
     LXLog(@"%s",__func__);
     
-    BOOL discovering = self.central.isScanning;
-    BOOL available = (self.central.state == CBManagerStatePoweredOn);
-    NSDictionary *adapterStateDict = @{@"discovering":@(discovering),
-                                   @"available":@(available)};
+    NSDictionary *adapterStateDict = [self bluetoothAdapterStateDictionary];
     
     NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
                                  ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
@@ -113,7 +125,16 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 /**
  When the state of the adapter changes, such as avability or state of discovery, this will be triggered.
 
- @param callback Callback to return weex result when completed; contains dictionary. Detailed as documents described.
+ @param callback When bluetooth state changes, this callback will be triggered with a dictionary.
+ resultDict = {
+    'result': (String) will be "succeed" or "fail"
+    'errCode': (Int) 0 if succeed.
+    'adapterState' = {
+        'discovering': (BOOL) whether the adapter is discovering devices.
+        'available': (BOOL) the availability of the adapter
+    }
+ }
+ @see RESULT_STRING,ERROR_CODE_STRING
  */
 - (void)onBluetoothAdapterStateChange:(WXModuleKeepAliveCallback)callback {
     self.onBluetoothStateChangeCallback = callback;
@@ -123,7 +144,11 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  Start to scan bluetooth devices.
 
  @param servicesArray Only scan devices that are advertising any of the specific services. NULL if scan all devices.
- @param callback Callback to return weex result when completed; contains dictionary. Detailed as documents described.
+ @param callback When new device is discovered, this callback will be triggered with a dictionary of peripheral information.
+ resultDict = {
+    'deviceID': (String) UUID of the bluetooth device
+    'name': (String) name of the device.
+ }
  */
 - (void)startBluetoothDevicesDiscoveryWithServices:(NSArray *)servicesArray callback:(WXModuleKeepAliveCallback)callback {
     LXLog(@"%s",__func__);
@@ -140,21 +165,24 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 /**
  stop scanning bluetooth devices
  */
-- (void)stopBluetoothDeviceDiscovery:(WXModuleCallback)callback {
+- (void)stopBluetoothDeviceDiscovery {
     LXLog(@"%s",__func__);
     
     [self.central stopScan];
-    
-    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
-                                 ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
-    callback(resultDict);
 }
 
 /**
  Get all discovered devices, including devices connected to the manager.
 
  @param servicesArray If not null, only devices with one of the specific services will be returned.
- @param callback <#callback description#>
+ @param callback Callback to weex with an array of devices.
+ resultArray = {
+    [
+        'identifier': (String) identifier of the device.
+        'name': (String) name of the device.
+    ]
+    ...
+ }
  */
 - (void)getBluetoothDevicesWithServices:(NSArray<NSString *> *)servicesArray callback:(WXModuleCallback)callback {
     LXLog(@"%s",__func__);
@@ -167,8 +195,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     NSArray *peripheralsArray = [self.central retrievePeripheralsWithIdentifiers:uuidArray];
     NSMutableArray *resultDeviceIDArray = [[NSMutableArray alloc] init];
     for (CBPeripheral *peripheral in peripheralsArray) {
-        NSString *identifier = peripheral.identifier.UUIDString;
-        [resultDeviceIDArray addObject:identifier];
+        [resultDeviceIDArray addObject:[self deviceInfomationWithPeripheral:peripheral]];
     }
     
     callback(resultDeviceIDArray);
@@ -180,17 +207,8 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  @param servicesArray If no null, only devices with specific services will be returned.
  @param callback <#callback description#>
  */
+//TODO: implement this function
 - (void)getConnectedBluetoothDevicesWithServices:(NSArray *)servicesArray callback:(WXModuleCallback)callback {
-    LXLog(@"%s",__func__);
-}
-
-/**
- When new device found, this will trigered.
- 
- @param callback <#callback description#>
- */
-//TODO: this may be useless
-- (void)onBluetoothDeviceFound:(WXModuleKeepAliveCallback)callback {
     LXLog(@"%s",__func__);
 }
 
@@ -198,7 +216,16 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  try connecting to a BLE device.
 
  @param deviceID The ID of the BLE device.
- @param callback <#callback description#>
+ @param callback When device connected, this callback will be triggered with a dictionary of result
+ resultDict = {
+    'result': (String)  will be "succeed" or "fail".
+    'errCode': (Int) 0 if succeed.
+    'device': (Dictionary) information of connected device.
+    deviceDict = {
+        'identifier': (String) identifier of the device.
+        'name': (String) name of the device.
+    }
+ }
  */
 - (void)createBLEConnectionWithDeviceID:(NSString *)deviceID callback:(WXModuleKeepAliveCallback)callback {
     LXLog(@"%s",__func__);
@@ -218,7 +245,16 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  Try disconnecting with connected device
 
  @param deviceID The ID of the BLE device.
- @param callback <#callback description#>
+ @param callback When close connection finishes, callback will be triggered with a dictionary of result.
+ resultDict = {
+    'result': (String)  will be "succeed" or "fail".
+    'errCode': (Int) 0 if succeed.
+    'device': (Dictionary) information of connected device.
+    deviceDict = {
+        'identifier': (String) identifier of the device.
+        'name': (String) name of the device.
+    }
+ }
  */
 - (void)closeBLEConnectionWithDeviceID:(NSString *)deviceID callback:(WXModuleKeepAliveCallback)callback {
     LXLog(@"%s",__func__);
@@ -238,7 +274,14 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  Get services of a BLE device.
 
  @param deviceID The ID of the BLE device.
- @param callback <#callback description#>
+ @param callback When services got, this callback will be triggered with an array of service information.
+ resultDict = {
+    [
+        'UUID': (String) UUID of the service.
+        'isPrimary': (BOOL)whether this service is primary.
+    ]
+    ...
+ }
  */
 - (void)getBLEDeviceServicesWithDeviceID:(NSString *)deviceID callback:(WXModuleKeepAliveCallback)callback {
     LXLog(@"%s",__func__);
@@ -254,7 +297,20 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
  @param deviceID The ID of the BLE device.
  @param serviceID The service ID  you want to find characteristics of.
- @param callback <#callback description#>
+ @param callback When characteristics found, this callback will be triggered with an array of characteristic information.
+ resultDict = {
+    [
+        'UUID': (String) UUID of the characteristic
+        'properties': (Dictionary) properties of the characteristic
+        propertyDict = {
+            'read': (BOOL) whether the characteristic is readable
+            'write': (BOOL) whether the characteristic is writable
+            'notify': (BOOL) whether the characteristic is notifiable
+            'indicate': (BOOL) whether the characteristic is indicatable
+        }
+        ...
+    ]
+ }
  */
 - (void)getBLEDeviceCharacteristicsWithDeviceID:(NSString *)deviceID serviceID:(NSString *)serviceID callback:(WXModuleKeepAliveCallback)callback {
     LXLog(@"%s",__func__);
@@ -282,11 +338,45 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  @param deviceID The ID of the BLE device.
  @param serviceID The service ID to which the characteristic belongs.
  @param characteristicID The characteristic ID from which you want to read.
- @param callback <#callback description#>
- @discussion Note that this characteristic should be readable.
+ @param callback When new value received, this callback will be triggered, with a dictionary of information.
+ resultDict = {
+    'UUID': (String) UUID of the characteristic
+    'value': (String) value of the characteristic. Note the string consists of 0s and 1s. For example, '0101101001011010' means '5A5A' in hex.
+ }
+ @discussion The characteristic must be readable.
  */
 - (void)readBLECharacteristicValueWithDeviceID:(NSString *)deviceID serviceID:(NSString *)serviceID characteristicID:(NSString *)characteristicID callback:(WXModuleCallback)callback {
     LXLog(@"%s",__func__);
+    
+    //TODO: similar code blocks need to be refactored.
+    if (![self.connectedDevice.identifier.UUIDString isEqualToString:deviceID]) {
+        return;
+    }
+    
+    //find corresponding CBService
+    CBService *service;
+    for (CBService *tmpService in self.connectedDevice.services) {
+        if ([tmpService.UUID.UUIDString isEqualToString:serviceID]) {
+            service = tmpService;
+        }
+    }
+    if (!service) {
+        return;
+    }
+    
+    //find corresponding CBCharacteristic
+    CBCharacteristic *characteristic;
+    for (CBCharacteristic *tmpCharacteristic in service.characteristics) {
+        if ([tmpCharacteristic.UUID.UUIDString isEqualToString:characteristicID]) {
+            characteristic = tmpCharacteristic;
+        }
+    }
+    if (!characteristic) {
+        return;
+    }
+    
+    self.onReadBLECharacteristicValueCallback = callback;
+    [self.connectedDevice readValueForCharacteristic:characteristic];
 }
 
 /**
@@ -298,10 +388,9 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  @param value The value that you want write to the characteristic.
  @param callback callback description
  @discussion 
-    Note that this characteristic should be writable.
+    This characteristic must be writable.
     Since only strings can be transferred, the format of String will be converted to NSData based on ASCII code. For example, the string "5A" will be converted to NSData with content {00000101 01000001};
-    value must only contains characters from "0" to "9" and from "A" to "F"(upper case); length of value must be even
- @seealso ...
+    value must only contains characters from "0" to "9" and from "A" to "F"(must be upper case); length of value must be even
  */
 - (void)writeBLECharacteristicValueWithDeviceID:(NSString *)deviceID serviceID:(NSString *)serviceID characteristicID:(NSString *)characteristicID value:(NSString *)value callback:(WXModuleCallback)callback {
     LXLog(@"%s",__func__);
@@ -340,6 +429,70 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
                                  ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
     callback(resultDict);
 }
+
+/**
+ Start listen to the characteristic. When new values arrives, the onBLECharacteristicValuChange: funtion will be called.
+
+ @param deviceID The ID of the BLE device.
+ @param serviceID The service ID to which the characteristic belongs.
+ @param characteristicID The characteristic ID from which you want to read.
+ @param state Whether start or stop listen to the characteristic.
+ @param callback When new value received, this callback will be triggered, with a dictionary of information.
+ resultDict = {
+    'UUID': (String) UUID of the characteristic
+    'value': (String) value of the characteristic. Note the string consists of 0s and 1s. For example, '0101101001011010' means '5A5A' in hex.
+ }
+ */
+- (void)notifyBLECharacteristicValueChangeWithDeviceID:(NSString *)deviceID servieID:(NSString *)serviceID characteristicID:(NSString *)characteristicID state:(BOOL)state callback:(WXModuleKeepAliveCallback)callback{
+    LXLog(@"%s",__func__);
+    
+    if (![self.connectedDevice.identifier.UUIDString isEqualToString:deviceID]) {
+        return;
+    }
+    
+    //find corresponding CBService
+    CBService *service;
+    for (CBService *tmpService in self.connectedDevice.services) {
+        if ([tmpService.UUID.UUIDString isEqualToString:serviceID]) {
+            service = tmpService;
+        }
+    }
+    if (!service) {
+        return;
+    }
+    
+    //find corresponding CBCharacteristic
+    CBCharacteristic *characteristic;
+    for (CBCharacteristic *tmpCharacteristic in service.characteristics) {
+        if ([tmpCharacteristic.UUID.UUIDString isEqualToString:characteristicID]) {
+            characteristic = tmpCharacteristic;
+        }
+    }
+    if (!characteristic) {
+        return;
+    }
+    
+    //TODO: characteristic must be notifiable/indicatible
+    self.onBLECharacteristicValueChangeCallback = callback;
+    [self.connectedDevice setNotifyValue:state forCharacteristic:characteristic];
+}
+
+/**
+ Set bluetooth connection state change callback.
+
+ @param callback When the state of BLE connection changes, such as disconnected, this callback will be triggered.
+ resultDict = {
+    'identifier': (String) identifier of the device.
+    'name': (String) name of the device.
+ }
+ */
+- (void)onBLEConnectionStateChange:(WXModuleKeepAliveCallback)callback {
+    LXLog(@"%s",__func__);
+    
+    self.onBLEConnectionStateChangeCallback = callback;
+}
+
+#pragma mark - Tool functions
 
 - (NSData *)stringToData:(NSString *)string {
     NSMutableData *data = [[NSMutableData alloc] init];
@@ -393,67 +546,47 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     return result;
 }
 
-/**
- Start listen to the characteristic. When new values arrives, the onBLECharacteristicValuChange: funtion will be called.
 
- @param deviceID The ID of the BLE device.
- @param serviceID The service ID to which the characteristic belongs.
- @param characteristicID The characteristic ID from which you want to read.
- @param state Whether start or stop listen to the characteristic.
- @param callback <#callback description#>
+/**
+ Form a dictionary of the state of bluetooth adapter.
+
+ @return A dictionary, consists whether adapter is discovering, and its availability.
+ 
  */
-- (void)notifyBLECharacteristicValueChangeWithDeviceID:(NSString *)deviceID servieID:(NSString *)serviceID characteristicID:(NSString *)characteristicID state:(BOOL)state callback:(WXModuleCallback)callback {
-    LXLog(@"%s",__func__);
-    
-    if (![self.connectedDevice.identifier.UUIDString isEqualToString:deviceID]) {
-        return;
-    }
-    
-    //find corresponding CBService
-    CBService *service;
-    for (CBService *tmpService in self.connectedDevice.services) {
-        if ([tmpService.UUID.UUIDString isEqualToString:serviceID]) {
-            service = tmpService;
-        }
-    }
-    if (!service) {
-        return;
-    }
-    
-    //find corresponding CBCharacteristic
-    CBCharacteristic *characteristic;
-    for (CBCharacteristic *tmpCharacteristic in service.characteristics) {
-        if ([tmpCharacteristic.UUID.UUIDString isEqualToString:characteristicID]) {
-            characteristic = tmpCharacteristic;
-        }
-    }
-    if (!characteristic) {
-        return;
-    }
-    
-    //TODO: characteristic must be notifiable/indicatible
-    [self.connectedDevice setNotifyValue:state forCharacteristic:characteristic];
+- (NSDictionary *)bluetoothAdapterStateDictionary {
+    BOOL discovering = self.central.isScanning;
+    BOOL available = (self.central.state == CBManagerStatePoweredOn);
+    NSDictionary *resultDict = @{BluetoothAdapterStateDiscovering:@(discovering),
+                                 BluetoothAdapterStateAvailable:@(available)};
+    return resultDict;
 }
 
-/**
- When new value of a characteristic arrives, this function will be called.
-
- @param callback <#callback description#>
- */
-//TODO: this function may be unioned to the notifyBLECharacteristicValueChangeWithDeviceID:servieID:characteristicID:state:callback: function
-- (void)onBLECharacteristicValueChange:(WXModuleKeepAliveCallback)callback {
-    LXLog(@"%s",__func__);
-    
-    self.onBLECharacteristicValueChangeCallback = callback;
+- (NSDictionary *)deviceInfomationWithPeripheral:(CBPeripheral *)peripheral {
+    NSString *nameString = (peripheral.name==NULL)?@"":peripheral.name;
+    NSDictionary *resultDict = @{@"identifier":peripheral.identifier.UUIDString,
+                                 @"name":nameString};
+    return resultDict;
 }
 
-/**
- When the state of BLE connection changes, such as disconnected, this function will be triggered.
+- (NSDictionary *)serviceDictWithService:(CBService *)service {
+    NSDictionary *resultDict = @{@"UUID":service.UUID.UUIDString,
+                                 @"isPrimary":@(service.isPrimary)};
+    return resultDict;
+}
 
- @param callback <#callback description#>
- */
-- (void)onBLEConnectionStateChange:(WXModuleCallback)callback {
-    LXLog(@"%s",__func__);
+- (NSDictionary *)characteristicDictWithCharacteristic:(CBCharacteristic *)characteristic {
+    CBCharacteristicProperties properties = characteristic.properties;
+    BOOL readable = properties & CBCharacteristicPropertyRead;
+    BOOL writable = properties & CBCharacteristicPropertyWrite;
+    BOOL notifiable = properties & CBCharacteristicPropertyNotify;
+    BOOL indicatable = properties & CBCharacteristicPropertyIndicate;
+    NSDictionary *propertyDict = @{@"read":@(readable),
+                                   @"write":@(writable),
+                                   @"notify":@(notifiable),
+                                   @"indicate":@(indicatable)};
+    NSDictionary *resultDict = @{@"UUID":characteristic.UUID.UUIDString,
+                                 @"properties":propertyDict};
+    return resultDict;
 }
 
 #pragma mark - CBCentralManagerDelegate
@@ -471,20 +604,12 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
         return;
     }
     
-    BOOL discovering = self.central.isScanning;
-    BOOL available = (self.central.state == CBManagerStatePoweredOn);
-    NSDictionary *adapterStateDict = @{@"discovering":@(discovering),
-                                       @"available":@(available)};
-    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
-                                 ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
-                                 @"adapterState":adapterStateDict};
+    NSDictionary *resultDict = [self bluetoothAdapterStateDictionary];
     self.onBluetoothStateChangeCallback(resultDict, YES);
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *, id> *)advertisementData RSSI:(NSNumber *)RSSI{
     LXLog(@"%s",__func__);
-    LXLog(@"advertisement: %@",advertisementData);
-    LXLog(@"RSSI: %@",RSSI);
     
     if (![self.devicesArray containsObject:peripheral]) {
         [self.devicesArray addObject:peripheral];
@@ -495,19 +620,12 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     }
     
     NSString *name = peripheral.name;
-    LXLog(@"device name:%@",name);
     if (name==NULL) {
         name = @"";
     }
-    NSDictionary *peripheralDict = @{@"deviceID":peripheral.identifier.UUIDString,
-                                     @"name":name,
-                                     @"RSSI":RSSI,
-                                     @"advertisData":advertisementData};
+    NSDictionary *peripheralDict = [self deviceInfomationWithPeripheral:peripheral];
     
-    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
-                                 ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
-                                 @"peripheral":peripheralDict};
-    self.onFoundBLEDeviceCallback(resultDict, YES);
+    self.onFoundBLEDeviceCallback(peripheralDict, YES);
 }
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral{
@@ -517,26 +635,38 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     self.connectedDevice.delegate = self;
     
     if (self.onDeviceConnectedCallback) {
+        NSDictionary *deviceDict = [self deviceInfomationWithPeripheral:peripheral];
         NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
-                                     ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
+                                     ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
+                                     @"peripheral:":deviceDict};
         self.onDeviceConnectedCallback(resultDict, NO);
     }
 }
 
 - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(nullable NSError *)error{
     LXLog(@"%s",__func__);
+    
+    if (self.onDeviceConnectedCallback) {
+        NSDictionary *deviceDict = [self deviceInfomationWithPeripheral:peripheral];
+        NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_FAILED,
+                                     ERROR_CODE_STRING: ERROR_CODE_UNKNOWN,
+                                     @"peripheral:":deviceDict};
+        self.onDeviceConnectedCallback(resultDict, NO);
+    }
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(nullable NSError *)error{
     LXLog(@"%s",__func__);
     
+    NSDictionary *deviceDict = [self deviceInfomationWithPeripheral:peripheral];
     NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
-                                 ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
+                                 ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
+                                 @"device":deviceDict};
+    self.onBLEConnectionStateChangeCallback(deviceDict, YES);
     self.onDeviceDisconnnectedCallback(resultDict, NO);
 }
 
 #pragma mark CBPeripheralDelegate
-
 
 - (void)peripheralDidUpdateName:(CBPeripheral *)peripheral {
     LXLog(@"%s",__func__);
@@ -554,10 +684,10 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     LXLog(@"%s",__func__);
     
     NSArray<CBService *> *services = self.connectedDevice.services;
-    NSMutableArray *serviceArray = [[NSMutableArray alloc] init];
+    NSMutableArray<NSDictionary *> *serviceArray = [[NSMutableArray alloc] init];
     for (CBService *service in services) {
-        NSString *serviceUUID = service.UUID.UUIDString;
-        [serviceArray addObject:serviceUUID];
+        NSDictionary *serviceDict = [self serviceDictWithService:service];
+        [serviceArray addObject:serviceDict];
     }
     self.onFoundServicesCallback(serviceArray, YES);
 }
@@ -571,13 +701,10 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     
     NSMutableArray *characteristics = [[NSMutableArray alloc] init];
     for (CBCharacteristic *characteristic in service.characteristics) {
-        NSString *characteristicUUID = characteristic.UUID.UUIDString;
-        [characteristics addObject:characteristicUUID];
-        //TODO: properties like readability/writability/notifibility should be returned.
+        NSDictionary *characteristicDict = [self characteristicDictWithCharacteristic:characteristic];
+        [characteristics addObject:characteristicDict];
     }
-    NSDictionary *resultDict = @{@"serviceID":service.UUID.UUIDString,
-                                 @"characteristics":characteristics};
-    self.onFoundCharacteristicsCallback(resultDict, YES);
+    self.onFoundCharacteristicsCallback(characteristics, YES);
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(nullable NSError *)error{
@@ -585,12 +712,16 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     
     NSData *value = characteristic.value;
     NSString *valueString = [self dataToString:value];
-    NSDictionary *resultDict = @{@"deviceID":self.connectedDevice.identifier.UUIDString,
-                                 @"serviceID":characteristic.service.UUID.UUIDString,
-                                 @"characteristicID":characteristic.UUID.UUIDString,
+    NSDictionary *resultDict = @{@"UUID":characteristic.UUID.UUIDString,
                                  @"value":valueString};
     
-    self.onBLECharacteristicValueChangeCallback(resultDict, YES);
+    if (self.onReadBLECharacteristicValueCallback) {
+        self.onReadBLECharacteristicValueCallback(resultDict);
+    }
+    
+    if (self.onBLECharacteristicValueChangeCallback) {
+        self.onBLECharacteristicValueChangeCallback(resultDict, YES);
+    }
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(nullable NSError *)error{
