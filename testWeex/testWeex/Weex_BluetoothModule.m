@@ -76,7 +76,6 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     self.onOpenBluetoothAdapterFinishCallback = callback;
 }
 
-
 /**
  Close the bluetooth adapter; this will disconnect all connections and release all resources.
 
@@ -178,7 +177,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  @param callback Callback to weex with an array of devices.
  resultArray = {
     [
-        'identifier': (String) identifier of the device.
+        'deviceID': (String) identifier of the device.
         'name': (String) name of the device.
     ]
     ...
@@ -222,7 +221,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     'errCode': (Int) 0 if succeed.
     'device': (Dictionary) information of connected device.
     deviceDict = {
-        'identifier': (String) identifier of the device.
+        'deviceID': (String) identifier of the device.
         'name': (String) name of the device.
     }
  }
@@ -237,8 +236,10 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
         }
     }
     
-    self.onDeviceConnectedCallback = callback;
-    [self.central connectPeripheral:peripheral options:nil];
+    if (peripheral) {
+        self.onDeviceConnectedCallback = callback;
+        [self.central connectPeripheral:peripheral options:nil];
+    }
 }
 
 /**
@@ -251,7 +252,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     'errCode': (Int) 0 if succeed.
     'device': (Dictionary) information of connected device.
     deviceDict = {
-        'identifier': (String) identifier of the device.
+        'deviceID': (String) identifier of the device.
         'name': (String) name of the device.
     }
  }
@@ -482,7 +483,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
  @param callback When the state of BLE connection changes, such as disconnected, this callback will be triggered.
  resultDict = {
-    'identifier': (String) identifier of the device.
+    'deviceID': (String) identifier of the device.
     'name': (String) name of the device.
  }
  */
@@ -563,7 +564,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
 - (NSDictionary *)deviceInfomationWithPeripheral:(CBPeripheral *)peripheral {
     NSString *nameString = (peripheral.name==NULL)?@"":peripheral.name;
-    NSDictionary *resultDict = @{@"identifier":peripheral.identifier.UUIDString,
+    NSDictionary *resultDict = @{@"deviceID":peripheral.identifier.UUIDString,
                                  @"name":nameString};
     return resultDict;
 }
