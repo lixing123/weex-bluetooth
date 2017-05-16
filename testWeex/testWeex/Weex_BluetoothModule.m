@@ -639,7 +639,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
         NSDictionary *deviceDict = [self deviceInfomationWithPeripheral:peripheral];
         NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
                                      ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
-                                     @"peripheral:":deviceDict};
+                                     @"device":deviceDict};
         self.onDeviceConnectedCallback(resultDict, NO);
     }
 }
@@ -663,8 +663,12 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
                                  ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
                                  @"device":deviceDict};
-    self.onBLEConnectionStateChangeCallback(deviceDict, YES);
-    self.onDeviceDisconnnectedCallback(resultDict, NO);
+    if (self.onBLEConnectionStateChangeCallback) {
+        self.onBLEConnectionStateChangeCallback(deviceDict, YES);
+    }
+    if (self.onDeviceDisconnnectedCallback) {
+        self.onDeviceDisconnnectedCallback(resultDict, NO);
+    }
 }
 
 #pragma mark CBPeripheralDelegate
