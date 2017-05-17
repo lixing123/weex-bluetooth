@@ -731,6 +731,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(nullable NSError *)error{
     LXLog(@"%s",__func__);
+    LXLog(@"write error:%@",error);
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(nullable NSError *)error{
