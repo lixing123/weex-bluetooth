@@ -22,8 +22,10 @@
     methods: {
       update: function (e){
         var that = this;
-        startFetal(function(toco){
-          that.target = toco;
+        startFetal(function(data){
+          var fhr = data[0];
+          var toco = data[1];
+          that.target = "fhr:" + fhr + ",toco:" + toco;
         })
       }
     }

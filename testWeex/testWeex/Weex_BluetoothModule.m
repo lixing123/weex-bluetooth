@@ -424,7 +424,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
         return;
     }
     
-    [self.connectedDevice writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
+    [self.connectedDevice writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
     
     NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
                                  ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
