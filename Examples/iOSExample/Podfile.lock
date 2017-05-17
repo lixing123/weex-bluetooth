@@ -1,0 +1,15 @@
+PODS:
+  - SocketRocket (0.5.1)
+  - WeexSDK (0.11.0):
+    - SocketRocket
+
+DEPENDENCIES:
+  - WeexSDK
+
+SPEC CHECKSUMS:
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+  WeexSDK: f9cfe6adc91fba3ca5e36bc9808bf1b6e8be2106
+
+PODFILE CHECKSUM: 0e82f3fe8ccb7396cbefb5fe36f61c89e809e7f1
+
+COCOAPODS: 1.2.1
