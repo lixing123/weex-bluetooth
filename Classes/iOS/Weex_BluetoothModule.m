@@ -61,7 +61,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
  @param callback When open bluetooth adapter has a result, this callback will be triggered with a dictionary.
  resultDict = {
-    'result': (String)  will be "succeed" or "fail".
+    'result': (String)  will be "success" or "fail".
     'errCode': (Int) 0 if succeed.
  }
  @see RESULT_STRING,ERROR_CODE_STRING
@@ -81,7 +81,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
  @param callback When close action finishes, this callback will be triggered with a dictionary.
  resultDict = {
-    'result': (String)  will be "succeed" or "fail".
+    'result': (String)  will be "success" or "fail".
     'errCode': (Int) 0 if succeed.
  }
  @see RESULT_STRING,ERROR_CODE_STRING
@@ -91,7 +91,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     self.central.delegate = nil;
     self.central = nil;
     
-    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
+    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCESS,
                                  ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
     callback(resultDict);
 }
@@ -101,7 +101,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
  @param callback callback to Weex with adapter state results dictionaray.
  resultDict = {
-    'result': (String) will be "succeed" or "fail"
+    'result': (String) will be "success" or "fail"
     'errCode': (Int) 0 if succeed.
     'adapterState' = {
         'discovering': (BOOL) whether the adapter is discovering devices.
@@ -115,7 +115,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     
     NSDictionary *adapterStateDict = [self bluetoothAdapterStateDictionary];
     
-    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
+    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCESS,
                                  ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
                                  @"adapterState":adapterStateDict};
     callback(resultDict);
@@ -126,7 +126,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
  @param callback When bluetooth state changes, this callback will be triggered with a dictionary.
  resultDict = {
-    'result': (String) will be "succeed" or "fail"
+    'result': (String) will be "success" or "fail"
     'errCode': (Int) 0 if succeed.
     'adapterState' = {
         'discovering': (BOOL) whether the adapter is discovering devices.
@@ -217,7 +217,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  @param deviceID The ID of the BLE device.
  @param callback When device connected, this callback will be triggered with a dictionary of result
  resultDict = {
-    'result': (String)  will be "succeed" or "fail".
+    'result': (String)  will be "success" or "fail".
     'errCode': (Int) 0 if succeed.
     'device': (Dictionary) information of connected device.
     deviceDict = {
@@ -248,7 +248,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  @param deviceID The ID of the BLE device.
  @param callback When close connection finishes, callback will be triggered with a dictionary of result.
  resultDict = {
-    'result': (String)  will be "succeed" or "fail".
+    'result': (String)  will be "success" or "fail".
     'errCode': (Int) 0 if succeed.
     'device': (Dictionary) information of connected device.
     deviceDict = {
@@ -426,7 +426,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     
     [self.connectedDevice writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
     
-    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
+    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCESS,
                                  ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
     callback(resultDict);
 }
@@ -596,7 +596,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     LXLog(@"%s",__func__);
     
     if (self.onOpenBluetoothAdapterFinishCallback && (self.central.state==CBManagerStatePoweredOn)) {
-        NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
+        NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCESS,
                                      ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
         self.onOpenBluetoothAdapterFinishCallback(resultDict, NO);
     }
@@ -637,7 +637,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     
     if (self.onDeviceConnectedCallback) {
         NSDictionary *deviceDict = [self deviceInfomationWithPeripheral:peripheral];
-        NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
+        NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCESS,
                                      ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
                                      @"device":deviceDict};
         self.onDeviceConnectedCallback(resultDict, NO);
@@ -660,7 +660,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     LXLog(@"%s",__func__);
     
     NSDictionary *deviceDict = [self deviceInfomationWithPeripheral:peripheral];
-    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCEED,
+    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCESS,
                                  ERROR_CODE_STRING: ERROR_CODE_SUCCEED,
                                  @"device":deviceDict};
     if (self.onBLEConnectionStateChangeCallback) {

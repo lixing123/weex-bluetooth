@@ -10,7 +10,7 @@
 #import <WeexSDK/WeexSDK.h>
 
 #define RESULT_STRING @"result"
-#define RESULT_STRING_SUCCEED @"succeed"
+#define RESULT_STRING_SUCCESS @"success"
 #define RESULT_STRING_FAILED @"fail"
 
 #define ERROR_CODE_STRING @"errCode"
