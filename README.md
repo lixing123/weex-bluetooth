@@ -1,11 +1,9 @@
 # weex-bluetooth
-An extremely easy-use bluetooth library for weex developers, to develop bluetooth-based applications with weex. 
+An extremely easy-use bluetooth library for weex developers. with only a few lines of code, you will be able to connect to a bluetooth device and read from/write to it!
 
 Both iOS and Android are supported.(Android version will be coming soon)
 
-with only a few lines of code, you will be able to connect to a bluetooth device and read from/write to it!
-
-For Chinese version of README click HERE(will be done).
+For Chinese version of README click HERE.
 
 ## Quick Example
 ``` javascript
