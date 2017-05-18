@@ -17,7 +17,7 @@ Fast response to issues. If you have any questions, feel free to post it!
 Friendly to Javascript Promise.
 
 ## Quick Example
-``` weex
+``` javascript
   //open bluetooth
   openBluetoothAdapter()
   .then(data => {//scan for BLE devices
