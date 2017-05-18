@@ -23,6 +23,7 @@
 @property(nonatomic, strong)WXModuleKeepAliveCallback onFoundCharacteristicsCallback;
 @property(nonatomic, strong)WXModuleKeepAliveCallback onBLECharacteristicValueChangeCallback;
 @property(nonatomic, strong)WXModuleCallback onReadBLECharacteristicValueCallback;
+@property(nonatomic, strong)WXModuleKeepAliveCallback onWriteToCharacteristicCompleteCallback;
 @property(nonatomic, strong)WXModuleKeepAliveCallback onBLEConnectionStateChangeCallback;
 
 @end
@@ -387,13 +388,17 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  @param serviceID The service ID to which the characteristic belongs.
  @param characteristicID The characteristic ID from which you want to read.
  @param value The value that you want write to the characteristic.
- @param callback callback description
- @discussion 
+ @param callback When write complete, this callback will be triggered, with result of write.
+ resultDict = {
+    'result': (String) will be "success" or "fail"
+    'errCode': (Int) 0 if succeed.
+ }
+ @discussion
     This characteristic must be writable.
     Since only strings can be transferred, the format of String will be converted to NSData based on ASCII code. For example, the string "5A" will be converted to NSData with content {00000101 01000001};
     value must only contains characters from "0" to "9" and from "A" to "F"(must be upper case); length of value must be even
  */
-- (void)writeBLECharacteristicValueWithDeviceID:(NSString *)deviceID serviceID:(NSString *)serviceID characteristicID:(NSString *)characteristicID value:(NSString *)value callback:(WXModuleCallback)callback {
+- (void)writeBLECharacteristicValueWithDeviceID:(NSString *)deviceID serviceID:(NSString *)serviceID characteristicID:(NSString *)characteristicID value:(NSString *)value callback:(WXModuleKeepAliveCallback)callback {
     LXLog(@"%s",__func__);
     
     NSData *data = [self stringToData:value];
@@ -424,11 +429,8 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
         return;
     }
     
+    self.onWriteToCharacteristicCompleteCallback = callback;
     [self.connectedDevice writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
-    
-    NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCESS,
-                                 ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
-    callback(resultDict);
 }
 
 /**
@@ -606,7 +608,9 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     }
     
     NSDictionary *resultDict = [self bluetoothAdapterStateDictionary];
-    self.onBluetoothStateChangeCallback(resultDict, YES);
+    if (self.onBluetoothStateChangeCallback) {
+        self.onBluetoothStateChangeCallback(resultDict, YES);
+    }
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *, id> *)advertisementData RSSI:(NSNumber *)RSSI{
@@ -731,7 +735,14 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(nullable NSError *)error{
     LXLog(@"%s",__func__);
-    LXLog(@"write error:%@",error);
+    
+    NSString *resultString = (error.code==0)?RESULT_STRING_SUCCESS:RESULT_STRING_FAILED;
+    NSString *errorCode = [NSString stringWithFormat:@"%ld",error.code];
+    NSDictionary *resultDict = @{RESULT_STRING: resultString,
+                                 ERROR_CODE_STRING: errorCode};
+    if (self.onWriteToCharacteristicCompleteCallback) {
+        self.onWriteToCharacteristicCompleteCallback(resultDict, NO);
+    }
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(nullable NSError *)error{
