@@ -7,15 +7,6 @@ with only a few lines of code, you will be able to connect to a bluetooth device
 
 For Chinese version of README click HERE(will be done).
 
-## Features
-Easy-understadable APIs to use.
-
-Full Documents and comments;
-
-Fast response to issues. If you have any questions, feel free to post it!
-
-Friendly to Javascript Promise.
-
 ## Quick Example
 ``` javascript
   //open bluetooth
@@ -60,6 +51,15 @@ Friendly to Javascript Promise.
   });
 
 ```
+
+## Features
+Easy-understadable APIs to use.
+
+Full Documents and comments;
+
+Fast response to issues. If you have any questions, feel free to post it!
+
+Friendly to Javascript Promise.
 
 ## Installation
 1\ Install Weex environment.
