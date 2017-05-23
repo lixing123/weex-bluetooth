@@ -14,11 +14,7 @@ For Chinese version of README click HERE.
     return discoverDevice(services,function(device){//scan filter
       var deviceName = device['name'];
       var index = deviceName.indexOf("you-ble-name");
-      if (index != -1){//the device is what we want.
-        return true;
-      }else{
-        return false;
-      }
+      return (index != -1);
     });
   })
   .then(device => {//connect to BLE device
@@ -31,7 +27,7 @@ For Chinese version of README click HERE.
     for (var index in services){
       var serviceID = services[index]['UUID'];
       if (serviceID=="FFF0") {
-        return discoverCharacteristics([deviceID, serviceID];
+        return discoverCharacteristics(deviceID, serviceID);
       }
     }
   }).then(data => {
@@ -47,7 +43,6 @@ For Chinese version of README click HERE.
       }
     }
   });
-
 ```
 
 ## Features
