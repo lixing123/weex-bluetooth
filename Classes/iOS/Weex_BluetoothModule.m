@@ -157,6 +157,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     for (NSString *serviceString in servicesArray) {
         [uuidArray addObject:[CBUUID UUIDWithString:serviceString]];
     }
+    
     [self.central scanForPeripheralsWithServices:uuidArray options:nil];
     
     self.onFoundBLEDeviceCallback = callback;
@@ -280,7 +281,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
  resultDict = {
     [
         'UUID': (String) UUID of the service.
-        'isPrimary': (BOOL)whether this service is primary.
+        'isPrimary': (BOOL) whether this service is primary.
     ]
     ...
  }
