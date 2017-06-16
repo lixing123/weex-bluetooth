@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "weex-bluetooth"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "An extremely easy-use bluetooth library for weex developers, to develop bluetooth-based applications with weex."
 
   # This description is used to generate tags and improve search results.

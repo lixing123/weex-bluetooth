@@ -22,7 +22,7 @@
 @property(nonatomic, strong)WXModuleKeepAliveCallback onFoundServicesCallback;
 @property(nonatomic, strong)WXModuleKeepAliveCallback onFoundCharacteristicsCallback;
 @property(nonatomic, strong)WXModuleKeepAliveCallback onBLECharacteristicValueChangeCallback;
-@property(nonatomic, strong)WXModuleCallback onReadBLECharacteristicValueCallback;
+@property(nonatomic, strong)WXModuleCallback          onReadBLECharacteristicValueCallback;
 @property(nonatomic, strong)WXModuleKeepAliveCallback onWriteToCharacteristicCompleteCallback;
 @property(nonatomic, strong)WXModuleKeepAliveCallback onBLEConnectionStateChangeCallback;
 
@@ -75,6 +75,13 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
     }
     
     self.onOpenBluetoothAdapterFinishCallback = callback;
+    
+    //if current state is already powered on, trigger the callback immediately.
+    if (self.central.state==CBManagerStatePoweredOn) {
+        NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCESS,
+                                     ERROR_CODE_STRING: ERROR_CODE_SUCCEED};
+        self.onOpenBluetoothAdapterFinishCallback(resultDict, NO);
+    }
 }
 
 /**
@@ -486,8 +493,12 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 
  @param callback When the state of BLE connection changes, such as disconnected, this callback will be triggered.
  resultDict = {
-    'deviceID': (String) identifier of the device.
-    'name': (String) name of the device.
+    'result': (String) will be "success" or "fail"
+    'errCode': (Int) 0 if succeed.
+    resultDict = {
+        'deviceID': (String) identifier of the device.
+        'name': (String) name of the device.
+    }
  }
  */
 - (void)onBLEConnectionStateChange:(WXModuleKeepAliveCallback)callback {
@@ -604,10 +615,6 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
         self.onOpenBluetoothAdapterFinishCallback(resultDict, NO);
     }
     
-    if (!self.onBluetoothStateChangeCallback) {
-        return;
-    }
-    
     NSDictionary *resultDict = [self bluetoothAdapterStateDictionary];
     if (self.onBluetoothStateChangeCallback) {
         self.onBluetoothStateChangeCallback(resultDict, YES);
@@ -656,7 +663,7 @@ WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
         NSDictionary *deviceDict = [self deviceInfomationWithPeripheral:peripheral];
         NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_FAILED,
                                      ERROR_CODE_STRING: ERROR_CODE_UNKNOWN,
-                                     @"peripheral:":deviceDict};
+                                     @"device":deviceDict};
         self.onDeviceConnectedCallback(resultDict, NO);
     }
 }
