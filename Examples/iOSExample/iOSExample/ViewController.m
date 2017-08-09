@@ -46,7 +46,11 @@
     
     //下面是错误的，会导致error
     //NSString *pathString = [[NSBundle mainBundle] pathForResource:@"weex" ofType:@"js"];
+<<<<<<< HEAD
     NSString *pathString = [NSString stringWithFormat:@"file://%@",[[NSBundle mainBundle] pathForResource:@"weex-bluetooth" ofType:@"js"]];
+=======
+    NSString *pathString = [NSString stringWithFormat:@"file://%@",[[NSBundle mainBundle] pathForResource:@"app.weex" ofType:@"js"]];
+>>>>>>> e290bca0f493d8f152a7dd7ff915bf63d4f26e34
     self.url = [NSURL URLWithString:pathString];
     [self.instance renderWithURL:self.url options:@{@"bundleUrl":[self.url absoluteString]} data:nil];
 }

@@ -14,7 +14,11 @@
 		8EA0157C1ECC5F65005E8AD4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EA0157A1ECC5F65005E8AD4 /* LaunchScreen.storyboard */; };
 		8EA015851ECC5FAB005E8AD4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA015841ECC5FAB005E8AD4 /* AppDelegate.m */; };
 		8EA0158B1ECC604C005E8AD4 /* Weex_BluetoothModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA0158A1ECC604C005E8AD4 /* Weex_BluetoothModule.m */; };
+<<<<<<< HEAD
 		A5381F5F1F3AE4BD007E068F /* weex-bluetooth.js in Resources */ = {isa = PBXBuildFile; fileRef = A5381F5E1F3AE4BD007E068F /* weex-bluetooth.js */; };
+=======
+		8EA0158F1ECD6EF1005E8AD4 /* app.weex.js in Resources */ = {isa = PBXBuildFile; fileRef = 8EA0158E1ECD6EF1005E8AD4 /* app.weex.js */; };
+>>>>>>> e290bca0f493d8f152a7dd7ff915bf63d4f26e34
 		AE78BB49E49D7874A8B4B44F /* libPods-iOSExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD40DDB7DCA6F77161B95979 /* libPods-iOSExample.a */; };
 /* End PBXBuildFile section */
 
@@ -31,7 +35,11 @@
 		8EA015841ECC5FAB005E8AD4 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		8EA015891ECC604C005E8AD4 /* Weex_BluetoothModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Weex_BluetoothModule.h; path = ../../../Classes/iOS/Weex_BluetoothModule.h; sourceTree = "<group>"; };
 		8EA0158A1ECC604C005E8AD4 /* Weex_BluetoothModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Weex_BluetoothModule.m; path = ../../../Classes/iOS/Weex_BluetoothModule.m; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		A5381F5E1F3AE4BD007E068F /* weex-bluetooth.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "weex-bluetooth.js"; sourceTree = "<group>"; };
+=======
+		8EA0158E1ECD6EF1005E8AD4 /* app.weex.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = app.weex.js; path = ../../../testWeex/dist/app.weex.js; sourceTree = "<group>"; };
+>>>>>>> e290bca0f493d8f152a7dd7ff915bf63d4f26e34
 		C8E2388C14FBC461ED3FEA9E /* Pods-iOSExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOSExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOSExample/Pods-iOSExample.release.xcconfig"; sourceTree = "<group>"; };
 		F8748C3B6DE53C79C73A61F3 /* Pods-iOSExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOSExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOSExample/Pods-iOSExample.debug.xcconfig"; sourceTree = "<group>"; };
 		FD40DDB7DCA6F77161B95979 /* libPods-iOSExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-iOSExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,7 +77,10 @@
 		8EA015601ECC5F65005E8AD4 = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				A5381F5E1F3AE4BD007E068F /* weex-bluetooth.js */,
+=======
+>>>>>>> e290bca0f493d8f152a7dd7ff915bf63d4f26e34
 				8EA0156B1ECC5F65005E8AD4 /* iOSExample */,
 				8EA0156A1ECC5F65005E8AD4 /* Products */,
 				41A9E85A81AEAFEFF85548C6 /* Pods */,
@@ -94,6 +105,10 @@
 				8EA015731ECC5F65005E8AD4 /* ViewController.m */,
 				8EA015891ECC604C005E8AD4 /* Weex_BluetoothModule.h */,
 				8EA0158A1ECC604C005E8AD4 /* Weex_BluetoothModule.m */,
+<<<<<<< HEAD
+=======
+				8EA0158E1ECD6EF1005E8AD4 /* app.weex.js */,
+>>>>>>> e290bca0f493d8f152a7dd7ff915bf63d4f26e34
 				8EA015751ECC5F65005E8AD4 /* Main.storyboard */,
 				8EA015781ECC5F65005E8AD4 /* Assets.xcassets */,
 				8EA0157A1ECC5F65005E8AD4 /* LaunchScreen.storyboard */,
@@ -173,9 +188,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
 				A5381F5F1F3AE4BD007E068F /* weex-bluetooth.js in Resources */,
 				8EA0157C1ECC5F65005E8AD4 /* LaunchScreen.storyboard in Resources */,
 				8EA015791ECC5F65005E8AD4 /* Assets.xcassets in Resources */,
+=======
+				8EA0157C1ECC5F65005E8AD4 /* LaunchScreen.storyboard in Resources */,
+				8EA015791ECC5F65005E8AD4 /* Assets.xcassets in Resources */,
+				8EA0158F1ECD6EF1005E8AD4 /* app.weex.js in Resources */,
+>>>>>>> e290bca0f493d8f152a7dd7ff915bf63d4f26e34
 				8EA015771ECC5F65005E8AD4 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

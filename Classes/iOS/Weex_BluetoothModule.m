@@ -53,6 +53,7 @@ WX_EXPORT_METHOD(@selector(notifyBLECharacteristicValueChangeWithDeviceID:servie
 WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 WX_EXPORT_METHOD(@selector(getBleDeviceConnetState:))
 
+
 - (id)init {
     self = [super init];
     
@@ -60,6 +61,7 @@ WX_EXPORT_METHOD(@selector(getBleDeviceConnetState:))
     
     return self;
 }
+
 
 - (void)getBleDeviceConnetState:(WXModuleKeepAliveCallback)callback{
     
@@ -116,6 +118,7 @@ WX_EXPORT_METHOD(@selector(getBleDeviceConnetState:))
     LXLog(@"%s",__func__);
     self.central.delegate = nil;
     self.central = nil;
+    
     self.connectedDevice = nil;
     
     NSDictionary *resultDict = @{RESULT_STRING: RESULT_STRING_SUCCESS,
@@ -697,6 +700,7 @@ WX_EXPORT_METHOD(@selector(getBleDeviceConnetState:))
     
     self.connectedDevice = nil;
     
+
     if (self.onBLEConnectionStateChangeCallback) {
         self.onBLEConnectionStateChangeCallback(deviceDict, YES);
     }
