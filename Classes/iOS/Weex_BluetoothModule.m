@@ -9,25 +9,31 @@
 #import "Weex_BluetoothModule.h"
 #import <CoreBluetooth/CoreBluetooth.h>
 
-static const NSString *ConnectedState = @"1";
-static const NSString *DisConnectState = @"0";
+static const NSString *ConnectedState       = @"1";
+static const NSString *DisConnectState      = @"0";
+
+static const int timeout                    = 10;
+
+static Weex_BluetoothModule *_singleInstance = nil;
 
 @interface Weex_BluetoothModule ()<CBCentralManagerDelegate,CBPeripheralDelegate>
 
-@property(nonatomic, strong)CBCentralManager *central;
-@property(nonatomic, strong)NSMutableArray<CBPeripheral *>* devicesArray;
-@property(nonatomic, strong)CBPeripheral *connectedDevice;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onOpenBluetoothAdapterFinishCallback;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onBluetoothStateChangeCallback;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onFoundBLEDeviceCallback;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onDeviceConnectedCallback;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onDeviceDisconnnectedCallback;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onFoundServicesCallback;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onFoundCharacteristicsCallback;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onBLECharacteristicValueChangeCallback;
-@property(nonatomic, strong)WXModuleCallback          onReadBLECharacteristicValueCallback;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onWriteToCharacteristicCompleteCallback;
-@property(nonatomic, strong)WXModuleKeepAliveCallback onBLEConnectionStateChangeCallback;
+@property (nonatomic, strong) CBCentralManager              *central;
+@property (nonatomic, strong) NSMutableArray<CBPeripheral*> * devicesArray;
+@property (nonatomic, strong) CBPeripheral                  *connectedDevice;
+@property (nonatomic, strong) NSTimer                       *connectTimer;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onOpenBluetoothAdapterFinishCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onBluetoothStateChangeCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onFoundBLEDeviceCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onDeviceConnectedCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onDeviceDisconnnectedCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onFoundServicesCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onFoundCharacteristicsCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onBLECharacteristicValueChangeCallback;
+@property (nonatomic, strong) WXModuleCallback          onReadBLECharacteristicValueCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onWriteToCharacteristicCompleteCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onBLEConnectionStateChangeCallback;
+@property (nonatomic, strong) WXModuleKeepAliveCallback onBleScanTimeOutCallback;
 
 @end
 
@@ -52,9 +58,28 @@ WX_EXPORT_METHOD(@selector(writeBLECharacteristicValueWithDeviceID:serviceID:cha
 WX_EXPORT_METHOD(@selector(notifyBLECharacteristicValueChangeWithDeviceID:servieID:characteristicID:state:callback:))
 WX_EXPORT_METHOD(@selector(onBLEConnectionStateChange:))
 WX_EXPORT_METHOD(@selector(getBleDeviceConnetState:))
+WX_EXPORT_METHOD(@selector(setBleScanTimeOutCallback:))
 
+
++ (instancetype)shareWeexBleModuleInstance {
+    
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        
+        _singleInstance = [super allocWithZone:NULL];
+    });
+    
+    return _singleInstance;
+}
+
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+    
+    return [Weex_BluetoothModule shareWeexBleModuleInstance];
+}
 
 - (id)init {
+    
     self = [super init];
     
     self.devicesArray = [[NSMutableArray alloc] init];
@@ -75,6 +100,13 @@ WX_EXPORT_METHOD(@selector(getBleDeviceConnetState:))
         callback(@{@"state":DisConnectState}, YES);
         
     }
+}
+
+/**
+ *  the bluetooth connect is timed out
+ */
+- (void)setBleScanTimeOutCallback:(WXModuleKeepAliveCallback)callback{
+    self.onBleScanTimeOutCallback = callback;
 }
 
 /**
@@ -182,6 +214,8 @@ WX_EXPORT_METHOD(@selector(getBleDeviceConnetState:))
 - (void)startBluetoothDevicesDiscoveryWithServices:(NSArray *)servicesArray callback:(WXModuleKeepAliveCallback)callback {
     LXLog(@"%s",__func__);
     
+    [self startPeripheralConnectTimer];
+
     NSMutableArray *uuidArray = [[NSMutableArray alloc] init];
     for (NSString *serviceString in servicesArray) {
         [uuidArray addObject:[CBUUID UUIDWithString:serviceString]];
@@ -270,6 +304,7 @@ WX_EXPORT_METHOD(@selector(getBleDeviceConnetState:))
     if (peripheral) {
         self.onDeviceConnectedCallback = callback;
         [self.central connectPeripheral:peripheral options:nil];
+        
     }
 }
 
@@ -793,6 +828,33 @@ WX_EXPORT_METHOD(@selector(getBleDeviceConnetState:))
 
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForDescriptor:(CBDescriptor *)descriptor error:(nullable NSError *)error{
     LXLog(@"%s",__func__);
+}
+
+#pragma mark -Private
+
+/**
+ *
+ * statr a timer to  detect whether the Bluetooth connection has timed out
+ */
+- (void)startPeripheralConnectTimer {
+    
+    _connectTimer = [NSTimer scheduledTimerWithTimeInterval:timeout
+                                                     target:self
+                                                   selector:@selector(connectTimeout)
+                                                   userInfo:nil
+                                                    repeats:NO];
+    
+}
+
+- (void)connectTimeout {
+    
+    if (self.connectedDevice) {
+        
+        [_connectTimer invalidate];
+    }
+    else {
+        self.onBleScanTimeOutCallback(@"", YES);
+    }
 }
 
 @end

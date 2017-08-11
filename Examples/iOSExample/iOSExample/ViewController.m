@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import <WeexSDK/WeexSDK.h>
+#import "Weex_BluetoothModule.h"
 
 @interface ViewController ()
 
@@ -22,6 +23,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    
+    Weex_BluetoothModule *m1 = [[Weex_BluetoothModule alloc] init];
+    
+    Weex_BluetoothModule *m2 = [[Weex_BluetoothModule alloc] init];
+    
+    [self test];
     
     self.instance = [[WXSDKInstance alloc] init];
     self.instance.viewController = self;
@@ -46,15 +54,17 @@
     
     //下面是错误的，会导致error
     //NSString *pathString = [[NSBundle mainBundle] pathForResource:@"weex" ofType:@"js"];
-<<<<<<< HEAD
     NSString *pathString = [NSString stringWithFormat:@"file://%@",[[NSBundle mainBundle] pathForResource:@"weex-bluetooth" ofType:@"js"]];
-=======
-    NSString *pathString = [NSString stringWithFormat:@"file://%@",[[NSBundle mainBundle] pathForResource:@"app.weex" ofType:@"js"]];
->>>>>>> e290bca0f493d8f152a7dd7ff915bf63d4f26e34
+
     self.url = [NSURL URLWithString:pathString];
     [self.instance renderWithURL:self.url options:@{@"bundleUrl":[self.url absoluteString]} data:nil];
 }
 
+- (void)test {
+    
+    Weex_BluetoothModule *m2 = [[Weex_BluetoothModule alloc] init];
+
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
