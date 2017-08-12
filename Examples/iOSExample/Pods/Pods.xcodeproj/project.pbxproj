@@ -31,13 +31,12 @@
 /* Begin PBXFileReference section */
 		1085A3B5A11AA78FB69DA933B8114965 /* Pods-iOSExample-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-iOSExample-dummy.m"; sourceTree = "<group>"; };
 		20342F78810E86CE81EAF0B1A79EACBB /* WeexSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WeexSDK.framework; sourceTree = "<group>"; };
-		230A62CAA6375D8BB7EB26A56E30C987 /* main.js */ = {isa = PBXFileReference; includeInIndex = 1; name = main.js; path = WeexSDK.framework/main.js; sourceTree = "<group>"; };
 		3861FAB88AF56FB5BF9260518A0BB900 /* SocketRocket-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SocketRocket-prefix.pch"; sourceTree = "<group>"; };
 		4727522C4DAA4B0E32BAFC573483A748 /* SRWebSocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SRWebSocket.h; path = SocketRocket/SRWebSocket.h; sourceTree = "<group>"; };
 		50F6DD994291AA39A94BEECAFAF0D785 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		56EAC82B607735B31080763FDA39DE71 /* SocketRocket.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SocketRocket.xcconfig; sourceTree = "<group>"; };
 		5CB7709D5FCF5FC1A5616D3085428B9D /* Pods-iOSExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iOSExample-acknowledgements.plist"; sourceTree = "<group>"; };
-		5D000DA97F8E4EC247703C6E941471A6 /* wx_load_error@3x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "wx_load_error@3x.png"; path = "WeexSDK.framework/wx_load_error@3x.png"; sourceTree = "<group>"; };
+		6A28BBCA4E84C676D3FE52E8C7E16A27 /* wx_load_error@3x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "wx_load_error@3x.png"; path = "WeexSDK.framework/wx_load_error@3x.png"; sourceTree = "<group>"; };
 		6DB1C0D7E7DC654B6E2E17388557525E /* SocketRocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SocketRocket.h; path = SocketRocket/SocketRocket.h; sourceTree = "<group>"; };
 		733890B52EF88231AC536C6C170A52D3 /* Pods-iOSExample-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-iOSExample-resources.sh"; sourceTree = "<group>"; };
 		7912F25CC42271206C804B3608649C3D /* Pods-iOSExample-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-iOSExample-acknowledgements.markdown"; sourceTree = "<group>"; };
@@ -49,6 +48,7 @@
 		B6C6C5ACDAB0B4D4950A7496C28AFF60 /* Pods-iOSExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iOSExample.debug.xcconfig"; sourceTree = "<group>"; };
 		B70817F92AB99E4E082FDD11F7CA77D6 /* libSocketRocket.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libSocketRocket.a; path = libSocketRocket.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFD4A2568173F16241235FDD8FE39FA8 /* SocketRocket-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SocketRocket-dummy.m"; sourceTree = "<group>"; };
+		D3912C16FD93EE5A5CD42FCB983D39EE /* native-bundle-main.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "native-bundle-main.js"; path = "WeexSDK.framework/native-bundle-main.js"; sourceTree = "<group>"; };
 		E8724D94009C6EC558C6D5D0026A6941 /* Pods-iOSExample-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-iOSExample-frameworks.sh"; sourceTree = "<group>"; };
 		FDABDEAF059D2E7F7687C57A64D65FB1 /* Pods-iOSExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iOSExample.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,11 +100,11 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		254B7424BBF4F938D942BB2FF319948D /* Resources */ = {
+		44B38ECD8D8F0BC63368CED9838E9329 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				230A62CAA6375D8BB7EB26A56E30C987 /* main.js */,
-				5D000DA97F8E4EC247703C6E941471A6 /* wx_load_error@3x.png */,
+				D3912C16FD93EE5A5CD42FCB983D39EE /* native-bundle-main.js */,
+				6A28BBCA4E84C676D3FE52E8C7E16A27 /* wx_load_error@3x.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -151,7 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				1AD98B8B25679C725FFF2C0D1DCC5363 /* Frameworks */,
-				254B7424BBF4F938D942BB2FF319948D /* Resources */,
+				44B38ECD8D8F0BC63368CED9838E9329 /* Resources */,
 			);
 			name = WeexSDK;
 			path = WeexSDK;
@@ -368,7 +368,7 @@
 			};
 			name = Release;
 		};
-		587B8ECC28E3A9FF4796C121925DC113 /* Debug */ = {
+		3BADA370475E93942AD0153572E1B595 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -412,9 +412,58 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Debug;
+		};
+		4D25E7D74638B1A58DF5BAA84A98AED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56EAC82B607735B31080763FDA39DE71 /* SocketRocket.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/SocketRocket/SocketRocket-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+			};
+			name = Debug;
+		};
+		6B145BA8DD149FCABECE7DC27525C447 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56EAC82B607735B31080763FDA39DE71 /* SocketRocket.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/SocketRocket/SocketRocket-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+			};
+			name = Release;
 		};
 		A4539323F02127DA287F8B76F52FCCD0 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -439,59 +488,13 @@
 			};
 			name = Debug;
 		};
-		D23286F65EF863F62E1ED5C43ED96FA4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 56EAC82B607735B31080763FDA39DE71 /* SocketRocket.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/SocketRocket/SocketRocket-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		F1093CB707A337923D70A555EDCE98EB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 56EAC82B607735B31080763FDA39DE71 /* SocketRocket.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/SocketRocket/SocketRocket-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				587B8ECC28E3A9FF4796C121925DC113 /* Debug */,
+				3BADA370475E93942AD0153572E1B595 /* Debug */,
 				3890D7C92DE120C2BA762135796CFA80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -500,8 +503,8 @@
 		5525358FDE3C9C63BC886C0A2970E6CB /* Build configuration list for PBXNativeTarget "SocketRocket" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F1093CB707A337923D70A555EDCE98EB /* Debug */,
-				D23286F65EF863F62E1ED5C43ED96FA4 /* Release */,
+				4D25E7D74638B1A58DF5BAA84A98AED5 /* Debug */,
+				6B145BA8DD149FCABECE7DC27525C447 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
